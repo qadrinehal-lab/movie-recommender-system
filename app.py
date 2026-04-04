@@ -55,7 +55,6 @@ if st.button("Get Recommendations"):
     correlations = list(results['correlation'])
     counts = list(results['count'])
 
-    # Display as list with poster on left and info on right
     for i in range(len(movies)):
         col1, col2 = st.columns([1, 4])
         with col1:
@@ -63,6 +62,8 @@ if st.button("Get Recommendations"):
             st.image(poster, width=120)
         with col2:
             st.markdown(f"### {i+1}. {movies[i]}")
-            st.write(f"⭐ Correlation Score: **{correlations[i]:.2f}**")
+            # Convert correlation to scale of 10
+            score = round(correlations[i] * 10, 1)
+            st.write(f"⭐ Match Score: **{score}/10**")
             st.write(f"🎬 Total Ratings: **{int(counts[i])}**")
         st.divider()

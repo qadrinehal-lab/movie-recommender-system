@@ -21,7 +21,6 @@ st.markdown("Select a movie and get top 10 similar movie recommendations!")
 # Fetch poster function
 def fetch_poster(movie_title):
     try:
-        # Clean movie title (remove year)
         clean_title = movie_title.split('(')[0].strip()
         url = f"https://api.themoviedb.org/3/search/movie?api_key={API_KEY}&query={clean_title}"
         response = requests.get(url)
@@ -52,17 +51,18 @@ if st.button("Get Recommendations"):
     st.subheader(f"Top 10 Movies Similar to '{selected_movie}'")
     results = recommend(selected_movie)
 
-    # Display in rows of 5
     movies = list(results.index)
     correlations = list(results['correlation'])
     counts = list(results['count'])
 
-    for i in range(0, len(movies), 5):
-        cols = st.columns(5)
-        for j, col in enumerate(cols):
-            if i + j < len(movies):
-                with col:
-                    poster = fetch_poster(movies[i + j])
-                    st.image(poster, use_column_width=True)
-                    st.write(f"**{movies[i + j]}**")
-                    st.caption(f"Correlation: {correlations[i+j]:.2f}")
+    # Display as list with poster on left and info on right
+    for i in range(len(movies)):
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            poster = fetch_poster(movies[i])
+            st.image(poster, width=120)
+        with col2:
+            st.markdown(f"### {i+1}. {movies[i]}")
+            st.write(f"⭐ Correlation Score: **{correlations[i]:.2f}**")
+            st.write(f"🎬 Total Ratings: **{int(counts[i])}**")
+        st.divider()

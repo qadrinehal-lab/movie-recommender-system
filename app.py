@@ -33,6 +33,17 @@ def fetch_poster(movie_title):
         pass
     return "https://via.placeholder.com/500x750?text=No+Poster"
 
+# Fix movie name function
+def fix_name(movie):
+    name = movie.split('(')[0].strip()
+    if ', The' in name:
+        name = 'The ' + name.replace(', The', '')
+    elif ', A' in name:
+        name = 'A ' + name.replace(', A', '')
+    elif ', An' in name:
+        name = 'An ' + name.replace(', An', '')
+    return name
+
 # Featured movies to show on dashboard
 featured_movies = [
     "Forrest Gump (1994)",
@@ -53,9 +64,7 @@ for i, movie in enumerate(featured_movies):
     with cols[i]:
         poster = fetch_poster(movie)
         st.image(poster, use_column_width=True)
-        # Show only movie name without year
-        short_name = movie.split('(')[0].strip()
-        st.caption(f"**{short_name}**")
+        st.caption(f"**{fix_name(movie)}**")
 
 st.markdown("---")
 
@@ -88,7 +97,7 @@ if st.button("Get Recommendations"):
             poster = fetch_poster(movies[i])
             st.image(poster, width=120)
         with col2:
-            st.markdown(f"### {i+1}. {movies[i]}")
+            st.markdown(f"### {i+1}. {fix_name(movies[i])}")
             score = round(correlations[i] * 10, 1)
             st.write(f"⭐ Match Score: **{score}/10**")
             st.write(f"🎬 Total Ratings: **{int(counts[i])}**")

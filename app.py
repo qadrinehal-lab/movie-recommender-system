@@ -9,7 +9,7 @@ ratings_mean_count = pickle.load(open('ratings_mean_count.pkl', 'rb'))
 movies_list = pickle.load(open('movies_list.pkl', 'rb'))
 
 # TMDB API Key
-API_KEY = "01fe5a4e8d21fd4e849dba6db1ab9965"
+API_KEY = st.secrets["TMDB_API_KEY"]
 
 # Page config
 st.set_page_config(page_title="Movie Recommender System", page_icon="🎬", layout="wide")

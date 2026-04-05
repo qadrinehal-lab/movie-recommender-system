@@ -16,7 +16,7 @@ st.set_page_config(page_title="Movie Recommender System", page_icon="🎬", layo
 
 # Title
 st.title("🎬 Movie Recommender System")
-st.markdown("Select a movie and get top 10 similar movie recommendations!")
+st.markdown("Discover movies you will love based on what you already enjoy!")
 
 # Fetch poster function
 def fetch_poster(movie_title):
@@ -33,6 +33,32 @@ def fetch_poster(movie_title):
         pass
     return "https://via.placeholder.com/500x750?text=No+Poster"
 
+# Featured movies to show on dashboard
+featured_movies = [
+    "Forrest Gump (1994)",
+    "Shawshank Redemption, The (1994)",
+    "Dark Knight, The (2008)",
+    "Inception (2010)",
+    "Pulp Fiction (1994)",
+    "Matrix, The (1999)",
+    "Fight Club (1999)",
+    "Interstellar (2014)"
+]
+
+# Show featured movies section
+st.markdown("---")
+st.subheader("🔥 Popular Movies")
+cols = st.columns(8)
+for i, movie in enumerate(featured_movies):
+    with cols[i]:
+        poster = fetch_poster(movie)
+        st.image(poster, use_column_width=True)
+        # Show only movie name without year
+        short_name = movie.split('(')[0].strip()
+        st.caption(f"**{short_name}**")
+
+st.markdown("---")
+
 # Recommend function
 def recommend(movie_name):
     movie_ratings = user_movie_matrix_filled[movie_name]
@@ -43,7 +69,8 @@ def recommend(movie_name):
     recommendations = corr_df[corr_df['count'] > 500].sort_values('correlation', ascending=False)
     return recommendations.iloc[1:11]
 
-# Dropdown
+# Search section
+st.subheader("🔍 Get Movie Recommendations")
 selected_movie = st.selectbox("Select a Movie", movies_list)
 
 # Button
@@ -62,7 +89,6 @@ if st.button("Get Recommendations"):
             st.image(poster, width=120)
         with col2:
             st.markdown(f"### {i+1}. {movies[i]}")
-            # Convert correlation to scale of 10
             score = round(correlations[i] * 10, 1)
             st.write(f"⭐ Match Score: **{score}/10**")
             st.write(f"🎬 Total Ratings: **{int(counts[i])}**")
